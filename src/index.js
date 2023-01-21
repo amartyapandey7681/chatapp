@@ -1,8 +1,67 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import SignupPage from './signupPage'
+import Signinp from './signin';
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { app } from './firebase-auth';
+
+
+import {Signin} from './context';
+
+import "./index.css";
+
+function App(){
+
+  const auth = getAuth(app);
+
+  const [ori , setOri] = useState(true);
+
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      
+      // const uid = user.uid;
+
+      setOri(false)
+
+        
+    } else {
+      
+        setOri(true);
+    }
+  });
+
+  if(ori){
+
+    return <>
+    
+    
+        <h1>Chat Application</h1>
+    
+      < Signin.Consumer>
+    
+        {({signin})=>(
+    
+          <div>
+          {!signin && <SignupPage />}
+          {/*{!signin  && <Signinp />}*/}
+          </div>
+          
+        )}
+        
+        
+    
+      </Signin.Consumer>
+      
+    
+      </>
+
+  }else{
+
+    return <h2>hello ab chat karo</h2>
+  }
+
+
+}
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -11,7 +70,3 @@ root.render(
   </React.StrictMode>
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
